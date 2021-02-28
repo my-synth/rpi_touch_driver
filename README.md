@@ -1,15 +1,19 @@
+# 7" inch Capacitive Touch Screen HDMI TFT LCD High Speed
+
 User-mode driver for touch part for:
 
-7" inch Capacitive Touch Screen HDMI TFT LCD High Speed fr Raspberry Pi/B/B+/Pi2
+7" inch Capacitive Touch Screen HDMI TFT LCD High Speed for Raspberry Pi/B/B+/Pi2
 
 A number of LCD displays with HDMI interface and capacitive touch
 can be found on ebay and similar places.  When plugging in the usb cable,
 Linux reports:
 
-- usb 6-2: New USB device found, idVendor=0eef, idProduct=0005
-- usb 6-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-- usb 6-2: Product: By ZH851
-- usb 6-2: Manufacturer: RPI_TOUCH
+```bash
+usb 6-2: New USB device found, idVendor=0eef, idProduct=0005
+usb 6-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 6-2: Product: By ZH851
+usb 6-2: Manufacturer: RPI_TOUCH
+```
 
 The manufacturer (WaveShare?) is breaking every rule:
   - idVendor=0eef is assigned to D-WAV Scientific Co., Ltd, but the device is
@@ -25,9 +29,13 @@ Examples:
 
 Touch events consists of 25 bytes, one example is
 
+```text
 aa 01 03 1b 01 d2 bb 03 01 68 02 cc 00 5d 01 ef 01 5f 01 fe 00 fb 02 37 cc
+```
 
 Offset:
+
+```text
 -     0 : Start byte (aa)
 -     1 : Any touch (0=off,1=on)
 -   2-3 : First touch X
@@ -43,16 +51,25 @@ Offset:
 - 20-21 : Fifth touch X
 - 22-23 : Fifth touch Y
 -    24 : End byte (cc or 00)
+```
 
 This user mode driver decodes the touch events and injects them back into the
-kernel using uinput.  The drives requires a kernel with uinput, and there is
+kernel using uinput. The drives requires a kernel with uinput, and there is
 nothing RPi-specific about it.
 
 To use:
-* % make && sudo make install
-* sudo make systemd-install (only if your system uses systemd, otherwise you must find your own way to start the daemon)
-* (not tested) If calibration is necessary, install 99-rpi-touch.conf to /etc/X11/xorg.conf.d,
-calibrate using whatever calibration program you fancy, uncomment the calibration option line, and replace the calibration constants in 99-rpi-touch.conf
+* Install dependecies:
+  ```bash
+  sudo apt-get install libusb-1.0-0-dev
+  sudo apt-get install libudev-dev
+  ```
+* Build and Install:
+  ```bash
+  make && sudo make install
+  sudo make systemd-install # (only if your system uses systemd, otherwise you must find your own way to start the daemon)
+  ```
+* (not tested) If calibration is necessary, install `99-rpi-touch.conf` to `/etc/X11/xorg.conf.d`,
+calibrate using whatever calibration program you fancy, uncomment the calibration option line, and replace the calibration constants in `99-rpi-touch.conf`.
 
 
 Copyright (c) 2015 Bjarne Steinsbo

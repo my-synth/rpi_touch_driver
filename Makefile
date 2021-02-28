@@ -17,5 +17,5 @@ install: ${PROG}
 systemd-install:
 	cp rpi-touch-driver.service /etc/systemd/system && chmod 644 /etc/systemd/system/rpi-touch-driver.service
 	systemctl daemon-reload
-	-systemctl enable rpi-touch-driver
+	systemctl enable rpi-touch-driver
 	systemctl start rpi-touch-driver
